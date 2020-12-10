@@ -1,0 +1,87 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xsi:schemaLocation="http://www.thymeleaf.org ">
+    <head>
+        <title>Spring Boot User CRUD Operations</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script th:src="@{~/js/customJS.js}" src="../static/js/customJS.js" type="text/javascript"></script>
+        <script th:src="@{~/js/parsley.js}" src="../static/js/parsley.js" type="text/javascript"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    </head>
+    <body>
+        <div class="container">
+            <div class="head-content col-xs-12">
+                <h3 th:text="${formType}">User Data</h3>
+            </div>
+            <br><br><br><br>
+            <form action="/updateUserData" method="POST" class='col-xs-12' id='submitUpadteForm'>
+                <input type="hidden" name="id" id="id" th:value="${user.id!=null ||user.id!='' } ? ${user.id}:''">
+                <div class="col-xs-12">
+                    <div class="form-group col-xs-6">
+                        <input type="text" name="firstname" class="form-control" id="firstname" placeholder="First Name" 
+                               th:value="${user.firstname!=null ||user.firstname!='' } ? ${user.firstname}:''"  data-parsley-pattern="[A-Za-z]+"
+                               data-parsley-trigger="change" data-parsley-error-message="First Name Mandatory Required Field"
+                               required="">
+                    </div>
+                    <div class="form-group col-xs-6">
+                        <input type="text" name="lastname" class="form-control" id="lastname" placeholder="Last Name"
+                               th:value="${user.lastname!=null ||user.lastname!='' } ? ${user.lastname}:''"
+                               data-parsley-trigger="change" data-parsley-pattern="[A-Za-z]+"
+                               data-parsley-error-message="Last Name Mandatory Required Field" required="">
+                    </div>
+                </div>
+                <div class="form-group col-xs-12">
+                    <div class="form-group col-xs-6">
+                        <input type="email" name="email"  class="form-control" id="email" placeholder="email"
+                               data-parsley-trigger="change"  
+                               th:value="${user.email!=null ||user.email!='' } ? ${user.email}:''"
+                               data-parsley-error-message="Email is Wrong/Necessary" required="">
+                    </div>
+                    <div class="form-group col-xs-6">
+                        <input type="number" name="contact" class="form-control" id="contact" placeholder="Contact Number"
+                               data-parsley-pattern="\d+" data-parsley-minlength="10" data-parsley-maxlength="10" 
+                               data-parsley-trigger="change" th:value="${user.contact!=null ||user.contact!='' } ? ${user.contact}:''" 
+                               required="">
+                    </div>
+                </div>
+                <div class="form-group col-xs-12">
+                    <div class="form-group col-xs-6">
+                        <textarea name="address" class="form-control" th:text="${user.address!=null ||user.address!='' } ? ${user.address}:''"
+                                  data-parsley-trigger="keyup" data-parsley-minlength="10" data-parsley-maxlength="100" required=""> 
+                        </textarea>
+                    </div>
+                    <div class="form-group col-xs-6">
+                        <select class="form-control" name="department" id="department" data-parsley-trigger="change" required="">
+                            <option value="">-- Select Department --</option>
+                            <option th:each="dept : ${departments}" th:text="${dept.name}" th:value="${dept.id}"
+                                    th:selected="${user.department!=0 && dept.id==user.department.id}?true:false">
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-xs-12 form-group">
+                    <input type="submit" class=" btn btn-info btn-lg"  value="Submit"/>
+                </div>
+            </form>
+        </div>
+        <script type="text/javascript">
+            $(function () {
+                $('#submitUpadteForm').parsley().on('field:validated', function () {
+                    var ok = $('.parsley-error').length === 0;
+                    if (ok) {
+                        $('#submitUpadteForm').submit();
+                    }
+                })
+                        .on('form:submit', function () {
+                            return false;
+                        });
+            });
+
+        </script>
+    </body>
+</html>
